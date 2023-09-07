@@ -33,25 +33,25 @@ func bubbleSort(arr *[10]int) {
 }
 
 // 2023.08.28 自己写的快排代码，还是有问题，放在后面在重新学习一下。
-func quickSort(arr []int) {
-	left := make([]int, 0)
-	right := make([]int, 0)
-
-	flag := arr[len(arr)/2]
-	for i := 0; i < len(arr); i++ {
-		if i == len(arr)/2 {
-			continue
-		}
-		if arr[i] < flag {
-			left = append(left, arr[i])
-		} else {
-			right = append(right, arr[i])
-		}
-	}
-	if len(left) > 0 {
-		quickSort(left)
-	}
-	if len(right) > 0 {
-		quickSort(right)
-	}
-}
+//func quickSort(arr []int) {
+//	left := make([]int, 0)
+//	right := make([]int, 0)
+//
+//	flag := arr[len(arr)/2]
+//	for i := 0; i < len(arr); i++ {
+//		if i == len(arr)/2 {
+//			continue
+//		}
+//		if arr[i] < flag {
+//			left = append(left, arr[i])
+//		} else {
+//			right = append(right, arr[i])
+//		}
+//	}
+//	if len(left) > 0 {
+//		quickSort(left)
+//	}
+//	if len(right) > 0 {
+//		quickSort(right)
+//	}
+//}
