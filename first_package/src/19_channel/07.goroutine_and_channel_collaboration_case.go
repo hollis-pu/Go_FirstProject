@@ -27,7 +27,7 @@ func main() {
 	go writeData(intChan)
 	go readDate(intChan, boolChan)
 
-	for {
+	for { // 这个for循环的作用是为了防止主线程先于前面的两个协程退出。
 		_, ok := <-boolChan
 		if !ok {
 			break
