@@ -22,16 +22,16 @@ func main() {
 		resultChan = make(chan int, 100) // 存放结果的管道。注意，这个结果管道的容量可以是任意的，而不是必须要比结果集更大，因为管道的内容可以边读边写。
 		dataSlice  = make([]int, 0)      // 存放结果的切片
 		//writeFinish  = make(chan bool, 1)
-		exitChan = make(chan bool, 100) // 判断n个协程是否都已经完成
+		exitChan = make(chan bool, 8) // 判断n个协程是否都已经完成
 	)
 
 	go writeDataToChan02(n, numChan)
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 8; i++ { // 如果是多核CPU，则会将这些协程分配到不同的逻辑CPU上。不如电脑的核心数8，则开启8个协程可以使CPU的利用率达到最大，再往上增加协程数量，性能提升就不是很明显了。
 		go handleData02(n, numChan, resultChan, exitChan)
 	}
 
 	go func() {
-		for i := 0; i < 100; i++ { // 这里判断n个协程是否都已经完成了
+		for i := 0; i < 8; i++ { // 这里判断n个协程是否都已经完成了
 			<-exitChan
 		}
 		close(resultChan)
