@@ -10,25 +10,18 @@ import "fmt"
   - @Create 2023/9/9 16:14
 */
 // 备注：20230910 这样写出来得到的切片始终为空，但是又找不到问题出在哪里....留到后面再解决吧！
-var (
-	n            = 100
-	numChan001   = make(chan int, n)
-	dataSlice    = make([]int, 0)
-	writeFinish  = make(chan bool, 1)
-	handleFinish = make(chan bool, 1)
-)
 
 func main() {
 	var (
-		n            = 100
-		numChan001   = make(chan int, n)
-		dataSlice    = make([]int, 0)
-		writeFinish  = make(chan bool, 1)
+		n          = 100
+		numChan001 = make(chan int, n)
+		dataSlice  = make([]int, 0)
+		//writeFinish  = make(chan bool, 1)
 		handleFinish = make(chan bool, 1)
 	)
 
-	go writeDataToChan(n, numChan001, writeFinish)
-	go handleData(numChan001, dataSlice, handleFinish)
+	go writeDataToChan(n, numChan001)
+	go handleData(n, numChan001, dataSlice, handleFinish)
 	fmt.Println(dataSlice)
 	for {
 		_, ok := <-handleFinish
@@ -38,7 +31,7 @@ func main() {
 	}
 }
 
-func writeDataToChan(n int, numChan001 chan int, writeFinish chan bool) {
+func writeDataToChan(n int, numChan001 chan int) {
 	for i := 0; i < n; i++ {
 		numChan001 <- i
 	}
@@ -46,12 +39,12 @@ func writeDataToChan(n int, numChan001 chan int, writeFinish chan bool) {
 	//writeFinish <- true
 }
 
-func handleData(numChan001 chan int, dataSlice []int, handleFinish chan bool) {
+func handleData(n int, numChan001 chan int, dataSlice []int, handleFinish chan bool) {
 	//<-writeFinish
 	for i := 0; i < n; i++ {
 		num, ok := <-numChan001
 		if !ok {
-			return
+			break
 		}
 		if isPrime(num) {
 			dataSlice = append(dataSlice, num)
