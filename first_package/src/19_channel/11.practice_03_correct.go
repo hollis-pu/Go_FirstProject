@@ -18,9 +18,9 @@ func main() {
 	start := time.Now().UnixMilli() // 返回毫秒数
 	var (
 		n          = 100000
-		numChan    = make(chan int, 100)  // 存放原始数据的管道
-		resultChan = make(chan int, 1000) // 存放结果的管道
-		dataSlice  = make([]int, 0)       // 存放结果的切片
+		numChan    = make(chan int, 100) // 存放原始数据的管道
+		resultChan = make(chan int, 100) // 存放结果的管道。注意，这个结果管道的容量可以是任意的，而不是必须要比结果集更大，因为管道的内容可以边读边写。
+		dataSlice  = make([]int, 0)      // 存放结果的切片
 		//writeFinish  = make(chan bool, 1)
 		exitChan = make(chan bool, 100) // 判断n个协程是否都已经完成
 	)
@@ -37,11 +37,14 @@ func main() {
 		close(resultChan)
 	}()
 
+	count := 0
 	for result := range resultChan { // 读出管道中的数据，存入到切片中
 		dataSlice = append(dataSlice, result)
+		count++
 	}
 
 	fmt.Println(dataSlice)
+	fmt.Println("count:", count)
 
 	end := time.Now().UnixMilli() // 返回毫秒数
 	fmt.Println("多协程的方式执行用时(ms)：", end-start)
